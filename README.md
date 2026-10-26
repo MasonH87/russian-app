@@ -7,7 +7,7 @@ A Duolingo-style, class-structured Russian course that runs in any browser. No b
 Any static file server works. With Python installed:
 
 ```bash
-python -m http.server 8765 --directory russkiy
+python -m http.server 8765
 ```
 
 Then open http://localhost:8765. On a phone, host the folder somewhere with HTTPS (GitHub Pages is free: push this folder to a repo, enable Pages, open the URL, then "Add to Home Screen"). The service worker makes it work offline after the first load.
