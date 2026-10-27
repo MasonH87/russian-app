@@ -16,13 +16,14 @@ Then open http://localhost:8765. On a phone, host the folder somewhere with HTTP
 
 | Area | What it does |
 |---|---|
-| **Learn** | Course map. Unit 0 is a seven-lesson alphabet bootcamp with an exam. Unit 1 is five authored lessons on greetings, "how are you", names, where you are from, and noun gender, plus a unit test. Lessons unlock in order; tests unlock the next unit at 80%. |
+| **Learn** | Course map. Unit 0 is an eight-lesson alphabet bootcamp (letters plus a vowel-sounds lesson) with an exam. Unit 2 covers family, “I have”, numbers to 100, ages, plurals and professions. Unit 1 is five authored lessons on greetings, "how are you", names, where you are from, and noun gender, plus a unit test. Lessons unlock in order; tests unlock the next unit at 80%. |
 | **Lesson flow** | Short lecture slides (tap any bold word to hear it), then 16 to 20 exercises. Wrong answers come back at the end of the lesson. Enter checks and continues. |
 | **Exercise types** | Multiple choice, match pairs, listen and type (with an on-screen ЙЦУКЕН keyboard), build the sentence from tiles, fill the blank, typed translation (typo-tolerant), and speak it (browser speech recognition, self-graded fallback). |
 | **Review** | SM-2 spaced repetition over every word and letter you have met. Exercise type adapts to how well you know the card. Missed cards repeat inside the session until you get them. |
 | **Mastery gates** | Lessons need 80% to count as passed. More than 8 due cards blocks new lessons until you review. Away 5+ days with a deck of 10+ cards triggers a checkpoint quiz (20 cards, 80%) before anything new unlocks; missed cards go back to the front of the queue. Thresholds live in `GATE` in `js/content.js`. |
 | **Homework** | Each lesson assigns one real-world task to do with your partner. Marking it done and having her confirm it earns XP and a badge. |
 | **Gamification** | XP, levels with Russian titles, daily goal ring, streak with freezes, 15 badges, crowns for perfect lessons. |
+| **Where you stand** | Profile card mapping your progress to a native-speaker age equivalent, a usefulness tier (Sign reader → Polite tourist → … → Independent tourist) and the CEFR/TORFL level, plus the concrete conditions for booking the real exam. Tiers are defined in `TIERS` in `js/gamify.js`. |
 | **Profile** | Level, 14-day activity chart, vocabulary mastery, letters learned, badges, road-to-TORFL progress, and a one-click coach report to paste into a chat with Claude. |
 | **Settings** | Name, daily goal, light/dark, voice choice, autoplay, slow speech, speaking exercises on/off, keyboard on/off, export/import progress, reset. |
 
@@ -66,7 +67,7 @@ New words are added to the review deck automatically when the lesson is first co
 
 ## Roadmap (Phase 1 → TORFL Elementary / A1)
 
-- Unit 2: Family and "I have" (у меня есть), numbers 1–20, age
+- Unit 2: Family and "I have" (у меня есть), numbers to 100, age, plurals, professions — **done**
 - Unit 3: Present-tense verbs, daily routine, questions
 - Unit 4: Prepositional and accusative cases
 - Unit 5: Food, ordering, likes and dislikes

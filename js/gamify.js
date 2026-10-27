@@ -50,10 +50,30 @@ export function checkBadges() {
   return earned;
 }
 
-/** Rough CEFR estimate from unit progress. */
+/**
+ * Where you stand: a native-speaker age equivalent, a usefulness tier, and the matching exam level.
+ * The age is honest-but-rough: an adult learner has adult grammar awareness and a child's vocabulary,
+ * so the comparison is about what you can *do*, not how you sound.
+ */
+export const TIERS = [
+  { id: 0, units: 0, words: 0, age: 'Newborn', ageNote: 'Hears the sounds, no words yet', use: 'Decoder', useNote: 'Learning to read the alphabet', cefr: 'Pre-A1', exam: null },
+  { id: 1, units: 1, words: 20, age: 'About 1 year old', ageNote: 'First words, recognises names', use: 'Sign reader', useNote: 'Can sound out signs, menus and names aloud', cefr: 'Pre-A1', exam: null },
+  { id: 2, units: 2, words: 60, age: '1½ to 2 years', ageNote: 'Single words and set phrases', use: 'Polite tourist', useNote: 'Greet, thank, apologise, introduce yourself, say where you are from', cefr: 'A1 starting', exam: null },
+  { id: 3, units: 3, words: 150, age: '2 to 2½ years', ageNote: 'Two-word sentences, counting, family', use: 'Survival tourist', useNote: 'Talk about family, count, give ages, say what you have', cefr: 'A1 starting', exam: null },
+  { id: 4, units: 4, words: 250, age: '2½ to 3 years', ageNote: 'Simple present-tense sentences', use: 'Small-talk starter', useNote: 'Say what you do, like and want in the present tense', cefr: 'A1', exam: null },
+  { id: 5, units: 6, words: 450, age: '3 to 4 years', ageNote: 'Short sentences with place and object', use: 'Basic conversationalist', useNote: 'Shops, cafés, directions, simple plans', cefr: 'A1', exam: null },
+  { id: 6, units: 8, words: 700, age: '4 to 5 years (with an adult’s grammar and a child’s vocabulary)', ageNote: 'Past and present, everyday topics', use: 'Independent tourist', useNote: 'Handle daily life in Russia without English', cefr: 'A1 · TORFL Elementary', exam: 'TORFL Elementary (ТЭУ)' },
+  { id: 7, units: 14, words: 1300, age: '5 to 6 years', ageNote: 'Tells simple stories, argues a point', use: 'Everyday conversationalist', useNote: 'Sustain a real conversation with her family', cefr: 'A2 · TORFL Basic', exam: 'TORFL Basic (ТБУ)' },
+  { id: 8, units: 22, words: 2300, age: '7 to 9 years', ageNote: 'Reads simple texts, follows TV', use: 'Working conversationalist', useNote: 'Work, news, opinions', cefr: 'B1 · TORFL First', exam: 'TORFL First (ТРКИ-I)' },
+];
+export function tierInfo(unitsPassed, wordsKnown) {
+  let cur = TIERS[0];
+  for (const t of TIERS) if (unitsPassed >= t.units && wordsKnown >= t.words) cur = t;
+  const next = TIERS[cur.id + 1] || null;
+  return { cur, next, unitsPassed, wordsKnown };
+}
+/** Kept for compatibility. */
 export function cefrEstimate(unitsPassed) {
-  if (unitsPassed <= 0) return { label: 'Pre-A1', note: 'Learning the alphabet' };
-  if (unitsPassed < 3) return { label: 'A1 (starting)', note: 'Survival phrases' };
-  if (unitsPassed < 6) return { label: 'A1', note: 'TORFL Elementary range' };
-  return { label: 'A1+ / A2', note: 'TORFL Basic range' };
+  const t = tierInfo(unitsPassed, 99999).cur;
+  return { label: t.cefr, note: t.use };
 }

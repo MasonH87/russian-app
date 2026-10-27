@@ -1,5 +1,5 @@
 // Service worker: offline-first app shell with stale-while-revalidate.
-const CACHE = 'russkiy-v3';
+const CACHE = 'russkiy-v4';
 const CORE = [
   './', './index.html', './manifest.webmanifest', './css/styles.css',
   './js/app.js', './js/util.js', './js/state.js', './js/srs.js', './js/audio.js',
@@ -7,7 +7,7 @@ const CORE = [
   './js/session.js', './js/generate.js', './js/coach.js',
   './js/views/home.js', './js/views/learn.js', './js/views/lesson.js', './js/views/review.js',
   './js/views/alphabet.js', './js/views/homework.js', './js/views/profile.js', './js/views/settings.js',
-  './data/alphabet.js', './data/units/index.js', './data/units/u0.js', './data/units/u1.js',
+  './data/alphabet.js', './data/units/index.js', './data/units/u0.js', './data/units/u1.js', './data/units/u2.js',
   './icons/icon.svg'
 ];
 self.addEventListener('install', e => {

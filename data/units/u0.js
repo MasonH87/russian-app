@@ -78,10 +78,60 @@ function buildLesson(group, idx) {
   };
 }
 
+/* ───── Lesson 8: the five vowel sounds (minimal pairs + stress) ───── */
+const S = (ru, en) => `<b data-say="${ru}">${ru}</b>${en ? ` <span class="muted">(${en})</span>` : ''}`;
+const PAIRS = [
+  ['мат', 'мать', 'checkmate / mother', 'ь softens the т'], ['брат', 'брать', 'brother / to take', 'ь softens the т'],
+  ['лук', 'люк', 'onion / hatch', 'у vs ю: same "oo", ю softens the л'], ['был', 'бил', 'was / hit', 'ы vs и'],
+  ['сад', 'сядь', 'garden / sit down!', 'а vs я: same "a", я softens the с'], ['мал', 'мял', 'small / crumpled', 'а vs я: same "a", я softens the м'],
+  ['угол', 'уголь', 'corner / coal', 'ь softens the л'], ['мыл', 'мил', 'washed / nice', 'ы vs и'],
+];
+const STRESS = [['молоко́', 'milk', ['мо-', '-ло-', '-ко'], '-ко'], ['соба́ка', 'dog', ['со-', '-ба-', '-ка'], '-ба-'], ['хорошо́', 'good', ['хо-', '-ро-', '-шо'], '-шо'],
+  ['спаси́бо', 'thank you', ['спа-', '-си-', '-бо'], '-си-'], ['Москва́', 'Moscow', ['Мос-', '-ква'], '-ква'], ['ба́бушка', 'grandmother', ['ба-', '-буш-', '-ка'], 'ба-']];
+const VOWELS = {
+  id: 'u0-l8', title: 'The five vowel sounds', ru: 'Пять гласных звуков', icon: '🎙️',
+  letters: [],
+  vocab: [{ ru: 'мать', en: 'mother' }, { ru: 'брать', en: 'to take' }, { ru: 'лук', en: 'onion' }, { ru: 'был', en: 'was' }, { ru: 'молоко́', en: 'milk' }, { ru: 'сад', en: 'garden' }],
+  lecture: [
+    { title: '🎙️ Ten letters, five sounds', html: `
+      <p>Russian has 10 vowel <em>letters</em> but only 5 vowel <em>sounds</em>. They come in pairs. The second letter of each pair makes the same sound, but either adds a "y" in front (at the start of a word or after a vowel) or <b>softens the consonant before it</b>.</p>
+      <table><tr><th>sound</th><th>plain</th><th>soft / "y" version</th><th>hear it</th></tr>
+      <tr><td>a</td><td>а</td><td>я</td><td>${S('мал')} · ${S('мял')}</td></tr>
+      <tr><td>e</td><td>э</td><td>е</td><td>${S('э́то')} · ${S('е́сли')}</td></tr>
+      <tr><td>o</td><td>о</td><td>ё</td><td>${S('нос')} · ${S('нёс')}</td></tr>
+      <tr><td>u</td><td>у</td><td>ю</td><td>${S('лук')} · ${S('люк')}</td></tr>
+      <tr><td>i</td><td>ы</td><td>и</td><td>${S('был')} · ${S('бил')}</td></tr></table>
+      <div class="callout"><p>"Soft" means the tongue arches up toward the roof of the mouth, as if a tiny "y" were glued to the consonant. <b>ль</b> ≈ the l in <em>million</em>; <b>ть</b> ≈ the t in <em>tune</em> (British).</p></div>` },
+    { title: 'Stress decides everything', html: `
+      <p>Only the <b>stressed</b> vowel is pronounced clearly. The others shrink:</p>
+      <ul><li>unstressed <b>о</b> → sounds like <b>а</b>: ${S('молоко́')} = <em>ma-la-KO</em>, ${S('хорошо́')} = <em>kha-ra-SHO</em></li>
+      <li>unstressed <b>е</b> and <b>я</b> → drift toward <b>и</b>: ${S('сестра́')} ≈ <em>sis-TRA</em>, ${S('язы́к')} ≈ <em>yi-ZYK</em></li>
+      <li>unstressed <b>а</b> stays "a" but short and lazy: ${S('соба́ка')} = <em>sa-BA-ka</em></li></ul>
+      <div class="callout"><p>Practical rule: find the stress mark, say that syllable <b>loud and long</b>, and mumble everything else. Russians genuinely mumble unstressed vowels. If you pronounce every vowel clearly you will sound like a robot.</p></div>
+      <p>Minimal pairs to train your ear (tap to hear):</p>
+      <ul>${PAIRS.map(([a, b, en, why]) => `<li>${S(a)} / ${S(b)} — ${en}. <span class="muted">${why}</span></li>`).join('')}</ul>` },
+  ],
+  build() {
+    const hear = PAIRS.map(([a, b, en]) => { const pick = Math.random() < 0.5 ? a : b; return { type: 'mc', prompt: 'Which word do you hear?', audio: pick, options: [a, b], answer: pick, explain: `${a} / ${b} = ${en}` }; });
+    const SOFT = { я: 'я (ya)', е: 'е (ye)', ё: 'ё (yo)', ю: 'ю (yu)', и: 'и (ee)' };
+    const pairs = [['а', 'я'], ['э', 'е'], ['о', 'ё'], ['у', 'ю'], ['ы', 'и']].map(([p, s]) => ({ type: 'mc', prompt: `Which letter is the soft / "y" version of ${p}?`, big: p, options: Object.values(SOFT), answer: SOFT[s], speakAfter: s }));
+    const stress = STRESS.map(([w, en, opts, ans]) => ({ type: 'mc', prompt: 'Which syllable is stressed?', big: w, audio: w, options: opts, answer: ans, explain: `${w} = ${en}` }));
+    const rules = [
+      { type: 'mc', prompt: 'How does an unstressed о sound?', options: ['like а', 'like о, just quieter', 'like у', 'it is silent'], answer: 'like а', explain: 'Москва = mahsk-VA, хорошо = kha-ra-SHO.' },
+      { type: 'mc', prompt: 'What does the soft sign ь do?', options: ['softens the consonant before it', 'adds an "o" sound', 'makes the vowel longer', 'nothing, it is decorative'], answer: 'softens the consonant before it', explain: 'мат (checkmate) vs мать (mother).' },
+      { type: 'listen_type', audio: 'мать', answer: 'мать', hint: 'mother. Listen for the soft ending.' },
+      { type: 'listen_type', audio: 'лук', answer: 'лук', hint: 'onion' },
+      { type: 'listen_type', audio: 'молоко́', answer: 'молоко', hint: 'milk. Three о, but only the last is stressed, so it is written о even where you hear а.' },
+    ];
+    return [...shuffle(pairs).slice(0, 3), ...shuffle(hear), ...shuffle(stress).slice(0, 4), ...rules];
+  },
+  homework: { title: 'Minimal pairs with her', text: 'Have her say these pairs in random order while you point at the one you hear: мат/мать, лук/люк, был/бил, нос/нёс. Then swap: you say them, she points. Aim for 8 out of 8 both ways. Write your score in the note.' },
+};
+
 export const U0 = {
   id: 'u0', num: 0, title: 'The Alphabet', ru: 'Алфавит', icon: '🔤',
-  desc: 'Read all 33 Cyrillic letters and sound out real words. Two weeks, seven lessons, one exam.',
-  lessons: GROUPS.map(buildLesson),
+  desc: 'Read all 33 Cyrillic letters, sound out real words, and train your ear on the five vowel sounds.',
+  lessons: [...GROUPS.map(buildLesson), VOWELS],
   test: {
     id: 'u0-test', title: 'Alphabet exam', icon: '🏆', passMark: 80,
     desc: 'Read 8 words, identify letters, type what you hear. Pass with 80% to unlock Unit 1.',
