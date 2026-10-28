@@ -7,6 +7,7 @@ import { levelInfo } from '../gamify.js';
 import { openLesson, openTest } from './lesson.js';
 import { audioBtn } from '../exercises.js';
 import { ttsSupported, hasRussianVoice } from '../audio.js';
+import { avatarEmoji, titleText } from '../shop.js';
 
 const qs = (ico, val, label) => h('div', { class: 'qs' }, h('b', {}, `${ico} ${val}`), h('span', {}, label));
 
@@ -43,7 +44,7 @@ export function render() {
 
   el.append(h('div', { class: 'card' },
     h('div', { class: 'hero' },
-      h('div', {}, h('h1', {}, name ? `Привет, ${name}!` : 'Привет!'), h('p', {}, greeting(pct, due))),
+      h('div', { class: 'row', style: { flexWrap: 'nowrap' } }, h('div', { class: 'avatar' }, avatarEmoji()), h('div', {}, h('h1', { style: { marginBottom: 0 } }, name ? `Привет, ${name}!` : 'Привет!'), titleText() ? h('div', { class: 'title-tag' }, titleText()) : null, h('p', { style: { margin: '4px 0 0' } }, greeting(pct, due)))),
       h('div', { class: 'ring', style: { '--p': pct } }, h('div', {}, h('b', {}, today), h('span', {}, `/ ${goal} XP`)))),
     h('div', { class: 'quick-stats' },
       qs('🔥', currentStreak(), state.streak.freezes ? `streak · ${state.streak.freezes} freeze${state.streak.freezes > 1 ? 's' : ''}` : 'day streak'),

@@ -300,3 +300,27 @@ input.text:focus,textarea.text:focus{border-color:var(--accent)}
 .say:hover{color:var(--accent)}
 .node.gated .circle{background:var(--gold-soft);border-color:var(--gold);filter:none}
 .node.gated{opacity:.9}
+
+/* ───────── Rubles, shop, swipe, themes ───────── */
+.stat.coins{color:var(--gold);border-color:var(--gold-soft);background:var(--gold-soft)}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.shop-item{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:14px 10px;border-radius:16px;background:var(--surface-2);border:2px solid transparent}
+.shop-item.owned{border-color:var(--surface-3)}
+.shop-item.equipped{border-color:var(--gold);background:var(--gold-soft)}
+.shop-emoji{font-size:2.4rem;line-height:1}
+.swatch{width:56px;height:40px;border-radius:12px}
+.shop-item .pill{margin-top:2px}
+.avatar{display:inline-grid;place-items:center;width:56px;height:56px;border-radius:18px;background:var(--surface-2);font-size:1.9rem;flex-shrink:0}
+.avatar.lg{width:72px;height:72px;font-size:2.4rem;border-radius:22px}
+.title-tag{display:inline-block;font-size:.8rem;font-weight:700;color:var(--gold);letter-spacing:.04em}
+@keyframes slideL{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes slideR{from{transform:translateX(-40px);opacity:0}to{transform:none;opacity:1}}
+#view.slide-left{animation:slideL .22s ease}
+#view.slide-right{animation:slideR .22s ease}
+/* colour themes bought in the shop */
+[data-accent=th-red]{--accent:#e63946;--accent-2:#b3202c;--accent-soft:rgba(230,57,70,.18);--blue:#ffd166;--gold:#ffd166}
+[data-accent=th-aurora]{--accent:#2dd4bf;--accent-2:#14a89a;--accent-soft:rgba(45,212,191,.18);--blue:#a3e635;--gold:#fde047}
+[data-accent=th-winter]{--accent:#7dd3fc;--accent-2:#38bdf8;--accent-soft:rgba(125,211,252,.18);--blue:#e0f2fe;--bg:#0b1526;--surface:#122036;--surface-2:#1a2c48;--surface-3:#24395c}
+[data-accent=th-sunset]{--accent:#fb923c;--accent-2:#ea580c;--accent-soft:rgba(251,146,60,.18);--blue:#f472b6;--gold:#fde68a;--bg:#160f1c;--surface:#1f1526;--surface-2:#2a1c33;--surface-3:#372543}
+[data-accent=th-emerald]{--accent:#34d399;--accent-2:#059669;--accent-soft:rgba(52,211,153,.18);--blue:#fbbf24;--bg:#0a1511;--surface:#111f19;--surface-2:#182a22;--surface-3:#21372d}
+[data-theme=light][data-accent=th-winter],[data-theme=light][data-accent=th-sunset],[data-theme=light][data-accent=th-emerald]{--bg:#f3f4fb;--surface:#fff;--surface-2:#eceef8;--surface-3:#dfe2f1}

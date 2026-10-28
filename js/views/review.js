@@ -64,6 +64,7 @@ function resultsEl(stats, title, note, close, extra = []) {
     h('div', { class: 'result-stats' },
       h('div', { class: 'rs gold' }, h('b', {}, `+${stats.xp}`), h('span', {}, 'XP')),
       h('div', { class: 'rs green' }, h('b', {}, `${stats.correct}/${stats.total}`), h('span', {}, 'first try')),
+      h('div', { class: 'rs gold' }, h('b', {}, `+${Math.floor(stats.xp / 10)}`), h('span', {}, 'rubles ₽')),
       h('div', { class: 'rs' }, h('b', {}, dueItems().length), h('span', {}, 'still due'))),
     ...extra,
     h('div', { class: 'row mt', style: { justifyContent: 'center' } },

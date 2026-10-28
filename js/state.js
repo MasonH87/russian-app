@@ -18,6 +18,9 @@ function defaults() {
     homework: {},            // hwId -> { done, doneAt, confirmed, note }
     badges: {},              // badgeId -> timestamp
     reviews: 0,              // total review answers
+    coins: 0,                // spendable rubles (₽), earned alongside XP
+    coinsEarned: 0,
+    shop: { owned: [], equipped: { avatar: '', title: '', theme: '' }, boosts: { doubleXP: 0 } },
     settings: { name: '', theme: 'dark', autoplay: true, keyboard: true, slowAudio: false, speakExercises: true, voice: '' },
   };
 }
@@ -27,7 +30,11 @@ function load() {
     const raw = localStorage.getItem(KEY);
     if (!raw) return defaults();
     const d = defaults(), s = JSON.parse(raw);
-    return { ...d, ...s, streak: { ...d.streak, ...(s.streak || {}) }, settings: { ...d.settings, ...(s.settings || {}) } };
+    const merged = { ...d, ...s, streak: { ...d.streak, ...(s.streak || {}) }, settings: { ...d.settings, ...(s.settings || {}) },
+      shop: { ...d.shop, ...(s.shop || {}), equipped: { ...d.shop.equipped, ...(s.shop?.equipped || {}) }, boosts: { ...d.shop.boosts, ...(s.shop?.boosts || {}) } } };
+    // Migration: rubles were added after launch; grant them retroactively for XP already earned.
+    if (s.coins === undefined) { merged.coins = Math.floor((s.xp || 0) / 10); merged.coinsEarned = merged.coins; }
+    return merged;
   } catch { return defaults(); }
 }
 
@@ -47,9 +54,22 @@ export function addXP(amount, reason = '') {
   state.xp += amount;
   state.lastStudy = Date.now();
   state.xpByDay[today] = (state.xpByDay[today] || 0) + amount;
+  const coins = Math.floor(amount / 10);
+  state.coins += coins; state.coinsEarned += coins;
   const res = touchStreak(today);
+  if (res.streakChanged && res.newStreak % 7 === 0) { state.coins += 15; state.coinsEarned += 15; res.streakBonus = 15; }
   save();
-  return { xp: amount, ...res, reason };
+  return { xp: amount, coins: coins + (res.streakBonus || 0), ...res, reason };
+}
+export function addCoins(n, reason = '') {
+  if (!n) return 0;
+  state.coins += n; state.coinsEarned += n; save();
+  return n;
+}
+export function spendCoins(n) {
+  if (state.coins < n) return false;
+  state.coins -= n; save();
+  return true;
 }
 
 function touchStreak(today) {

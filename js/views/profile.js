@@ -5,6 +5,7 @@ import { masteryCounts } from '../srs.js';
 import { levelInfo, BADGES, cefrEstimate, tierInfo, TIERS } from '../gamify.js';
 import { unitsPassed, ACTIVE_UNITS } from '../content.js';
 import { coachSummary } from '../coach.js';
+import { avatarEmoji, titleText } from '../shop.js';
 import { toast } from '../util.js';
 
 function coachCard() {
@@ -25,7 +26,9 @@ export function render() {
   const words = masteryCounts(id => id.startsWith('w:')), letters = masteryCounts(id => id.startsWith('l:'));
   const cefr = { label: tierInfo(unitsPassed(), words.total).cur.cefr, note: tierInfo(unitsPassed(), words.total).cur.use };
   const el = h('div');
-  el.append(h('div', { class: 'spread' }, h('h1', {}, state.settings.name ? `${state.settings.name}` : 'Your profile'), h('a', { class: 'btn secondary sm', href: '#/settings' }, '⚙️ Settings')));
+  el.append(h('div', { class: 'spread' },
+    h('div', { class: 'row' }, h('div', { class: 'avatar lg' }, avatarEmoji()), h('div', {}, h('h1', { style: { marginBottom: 0 } }, state.settings.name ? `${state.settings.name}` : 'Your profile'), titleText() ? h('div', { class: 'title-tag' }, titleText()) : null)),
+    h('div', { class: 'row' }, h('a', { class: 'btn gold sm', href: '#/shop' }, `₽ ${state.coins} · Shop`), h('a', { class: 'btn secondary sm', href: '#/settings' }, '⚙️'))));
 
   el.append(h('div', { class: 'card' }, h('div', { class: 'level-card' },
     h('div', { class: 'level-num' }, lvl.level),

@@ -1,8 +1,9 @@
 // Homework: real-world tasks assigned by lessons, done with your partner.
 import { h, toast, navigate } from '../util.js';
-import { state, save, addXP } from '../state.js';
+import { state, save, addXP, addCoins } from '../state.js';
 import { homeworkList } from '../content.js';
 import { XP, checkBadges } from '../gamify.js';
+import { COINS } from '../shop.js';
 
 export function render() {
   const list = homeworkList();
@@ -20,13 +21,13 @@ function card(hw) {
   const note = h('textarea', { class: 'text', rows: 2, placeholder: 'Notes: words you learned, her score, what to fix…' }, st.note || '');
   note.addEventListener('change', () => { st.note = note.value; save(); });
   const doneBtn = h('button', { class: `check${st.done ? ' on' : ''}`, type: 'button', onclick: () => {
-    if (!st.done) { st.done = true; st.doneAt = Date.now(); addXP(XP.homework, 'homework'); toast(`+${XP.homework} XP · homework done`, 'gold'); }
+    if (!st.done) { st.done = true; st.doneAt = Date.now(); addXP(XP.homework, 'homework'); if (!st.coinsGiven) { st.coinsGiven = true; addCoins(COINS.homework); } toast(`+${XP.homework} XP · +₽${COINS.homework} · homework done`, 'gold'); }
     else { st.done = false; save(); }
     checkBadges(); navigate('#/homework');
   } }, st.done ? '✓ Done' : 'Mark done');
   const confBtn = h('button', { class: `check${st.confirmed ? ' on' : ''}`, type: 'button', title: 'Tick this once your partner has heard you do it', onclick: () => {
     st.confirmed = !st.confirmed;
-    if (st.confirmed && !st.confirmedXP) { st.confirmedXP = true; addXP(XP.homeworkConfirmed, 'homework-confirmed'); toast(`+${XP.homeworkConfirmed} XP · partner confirmed`, 'gold'); }
+    if (st.confirmed && !st.confirmedXP) { st.confirmedXP = true; addXP(XP.homeworkConfirmed, 'homework-confirmed'); addCoins(COINS.partnerConfirmed); toast(`+${XP.homeworkConfirmed} XP · +₽${COINS.partnerConfirmed} · partner confirmed`, 'gold'); }
     else save();
     checkBadges(); navigate('#/homework');
   } }, st.confirmed ? '💞 Partner confirmed' : '💞 Partner confirms');
