@@ -43,12 +43,13 @@ export const ITEMS = [
 /* ───── Mystery box (Матрёшка): CS:GO-style case with rarity tiers ───── */
 export const BOX = { id: 'box', price: 60, name: 'Матрёшка', en: 'Mystery box' };
 export const RARITIES = [
-  { id: 'common', ru: 'Обычный', en: 'Common', color: '#b0bec5', weight: 52, value: 10 },
-  { id: 'uncommon', ru: 'Необычный', en: 'Uncommon', color: '#5e98d9', weight: 26, value: 20 },
+  { id: 'common', ru: 'Обычный', en: 'Common', color: '#9fb0c3', weight: 50, value: 10 },
+  { id: 'uncommon', ru: 'Необычный', en: 'Uncommon', color: '#5e98d9', weight: 25, value: 20 },
   { id: 'rare', ru: 'Редкий', en: 'Rare', color: '#4b69ff', weight: 13, value: 40 },
-  { id: 'epic', ru: 'Очень редкий', en: 'Epic', color: '#8847ff', weight: 6, value: 80 },
-  { id: 'legendary', ru: 'Легендарный', en: 'Legendary', color: '#eb4b4b', weight: 2.5, value: 160 },
-  { id: 'exceptional', ru: 'Исключительный', en: 'Exceptional', color: '#ffd700', weight: 0.5, value: 320 },
+  { id: 'epic', ru: 'Очень редкий', en: 'Epic', color: '#8847ff', weight: 7, value: 80 },
+  { id: 'mythic', ru: 'Мифический', en: 'Mythic', color: '#d32ce6', weight: 3.2, value: 120 },
+  { id: 'legendary', ru: 'Легендарный', en: 'Legendary', color: '#eb4b4b', weight: 1.5, value: 200 },
+  { id: 'exceptional', ru: 'Исключительный', en: 'Exceptional', color: '#e4ae39', weight: 0.3, value: 400 },
 ];
 export const rarity = id => RARITIES.find(r => r.id === id);
 const A = (id, emoji, ru, en, r) => ({ id: 'bx-' + id, kind: 'avatar', emoji, ru, name: ru, en, rarity: r, box: true });
@@ -64,14 +65,14 @@ export const BOX_ITEMS = [
   A('ice', '🧊', 'лёд', 'ice', 'rare'), A('polarbear', '🐻‍❄️', 'бе́лый медве́дь', 'polar bear', 'rare'), A('mountain', '🏔️', 'гора́', 'mountain', 'rare'),
   A('train', '🚂', 'по́езд', 'train', 'rare'), A('piano', '🎹', 'пиани́но', 'piano', 'rare'), A('borscht', '🍲', 'борщ', 'borscht', 'rare'),
   A('theatre', '🏛️', 'теа́тр', 'theatre', 'rare'), A('ballet', '🩰', 'бале́т', 'ballet', 'rare'), A('samovar', '🫖', 'самова́р', 'samovar', 'rare'),
-  A('cosmos', '🌌', 'ко́смос', 'cosmos', 'epic'), A('sputnik', '🛰️', 'спу́тник', 'satellite', 'epic'), A('reindeer', '🦌', 'оле́нь', 'reindeer', 'epic'),
-  A('horse', '🐎', 'ло́шадь', 'horse', 'epic'), A('church', '⛪', 'це́рковь', 'church', 'epic'), A('fireworks', '🎆', 'салю́т', 'fireworks', 'epic'),
+  A('cosmos', '🌌', 'ко́смос', 'cosmos', 'mythic'), A('sputnik', '🛰️', 'спу́тник', 'satellite', 'mythic'), A('reindeer', '🦌', 'оле́нь', 'reindeer', 'epic'),
+  A('horse', '🐎', 'ло́шадь', 'horse', 'epic'), A('church', '⛪', 'це́рковь', 'church', 'epic'), A('fireworks', '🎆', 'салю́т', 'fireworks', 'mythic'),
   A('tiger', '🐯', 'тигр', 'tiger', 'legendary'), A('firebird', '🔥', 'жар-пти́ца', 'firebird', 'legendary'), A('snowmaiden', '❄️', 'Снегу́рочка', 'Snow Maiden', 'legendary'),
   A('frost', '🎅', 'Дед Моро́з', 'Grandfather Frost', 'legendary'), A('diamond', '💎', 'алма́з', 'diamond', 'legendary'),
   A('gold', '🥇', 'зо́лото', 'gold', 'exceptional'), A('star', '🌟', 'звезда́', 'star', 'exceptional'), A('trophy', '🏆', 'ку́бок', 'trophy', 'exceptional'),
   { id: 'bx-th-night', kind: 'theme', ru: 'Поля́рная ночь', name: 'Поля́рная ночь', en: 'Polar night', rarity: 'epic', box: true, swatch: ['#3b2d8f', '#0b1030'] },
   { id: 'bx-th-firebird', kind: 'theme', ru: 'Жар-пти́ца', name: 'Жар-пти́ца', en: 'Firebird', rarity: 'legendary', box: true, swatch: ['#ff3d00', '#ffd600'] },
-  { id: 'bx-t-bogatyr', kind: 'title', ru: 'Богаты́рь', name: 'Богаты́рь', en: 'Bogatyr (epic hero)', rarity: 'epic', box: true },
+  { id: 'bx-t-bogatyr', kind: 'title', ru: 'Богаты́рь', name: 'Богаты́рь', en: 'Bogatyr (epic hero)', rarity: 'mythic', box: true },
   { id: 'bx-t-polyglot', kind: 'title', ru: 'Полигло́т', name: 'Полигло́т', en: 'Polyglot', rarity: 'rare', box: true },
   { id: 'bx-t-tourist', kind: 'title', ru: 'Тури́ст', name: 'Тури́ст', en: 'Tourist', rarity: 'common', box: true },
 ];

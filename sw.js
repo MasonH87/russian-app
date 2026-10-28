@@ -1,5 +1,5 @@
 // Service worker: offline-first app shell with stale-while-revalidate.
-const CACHE = 'russkiy-v6';
+const CACHE = 'russkiy-v7';
 const CORE = [
   './', './index.html', './manifest.webmanifest', './css/styles.css',
   './js/app.js', './js/util.js', './js/state.js', './js/srs.js', './js/audio.js',
