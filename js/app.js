@@ -13,12 +13,13 @@ import * as homework from './views/homework.js';
 import * as profile from './views/profile.js';
 import * as settings from './views/settings.js';
 import * as shop from './views/shop.js';
+import * as inventory from './views/inventory.js';
 import { openLesson, openTest } from './views/lesson.js';
 
-const routes = { home, learn, review, alphabet, homework, profile, settings, shop };
+const routes = { home, learn, review, alphabet, homework, profile, settings, shop, inventory };
 // Tab order for swiping; secondary pages map onto their parent tab.
-const TABS = ['home', 'learn', 'review', 'homework', 'profile'];
-const PARENT = { alphabet: 'learn', settings: 'profile', shop: 'profile' };
+const TABS = ['home', 'learn', 'review', 'homework', 'inventory', 'profile'];
+const PARENT = { alphabet: 'learn', settings: 'profile', shop: 'inventory' };
 let currentRoute = 'home';
 
 function applyTheme() {

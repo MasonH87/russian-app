@@ -23,7 +23,7 @@ export function render() {
     const items = ITEMS.filter(i => i.kind === kind);
     el.append(h('div', { class: 'card' }, h('h3', {}, title), h('p', { class: 'small' }, desc), h('div', { class: 'shop-grid' }, items.map(card))));
   }
-  el.append(collectionCard());
+  el.append(h('a', { class: 'card soft', href: '#/inventory', style: { display: 'block' } }, h('h3', {}, '🎒 My inventory ›'), h('p', { class: 'small', style: { margin: 0 } }, `${BOX_ITEMS.filter(i => owned(i.id)).length}/${BOX_ITEMS.length} box items collected. Equip avatars, titles and themes from the Items tab.`)));
   return el;
 }
 

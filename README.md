@@ -25,7 +25,8 @@ Then open http://localhost:8765. On a phone, host the folder somewhere with HTTP
 | **Gamification** | XP, levels with Russian titles, daily goal ring, streak with freezes, 15 badges, crowns for perfect lessons. |
 | **Rubles and shop** | A spendable currency (₽) earned alongside XP (1 per 10 XP plus bonuses for first passes, perfect lessons, tests, homework, weekly streaks). The shop sells avatars, Russian titles, colour themes, streak freezes and double-XP tokens. Nothing in the shop bypasses the mastery gates. Items live in `ITEMS` in `js/shop.js`. Every item is a real Russian word and joins the review deck when owned. |
 | **Mystery box** | The Матрёшка box (₽60) opens with a CS:GO-style scrolling reel and six rarity tiers (Обычный 52% → Исключительный 0.5%). 50+ box-only avatars, titles and themes; duplicates refund half the item’s value. Pool and odds in `BOX_ITEMS` / `RARITIES` in `js/shop.js`. |
-| **Swipe navigation** | On touch screens, swipe left or right anywhere on a page to move between the five tabs. |
+| **Inventory (Items tab)** | Everything you own: equipped summary, collection progress per rarity, and tap-to-equip cards tinted by rarity. |
+| **Swipe navigation** | On touch screens, swipe left or right anywhere on a page to move between the six tabs. |
 | **Where you stand** | Profile card mapping your progress to a native-speaker age equivalent, a usefulness tier (Sign reader → Polite tourist → … → Independent tourist) and the CEFR/TORFL level, plus the concrete conditions for booking the real exam. Tiers are defined in `TIERS` in `js/gamify.js`. |
 | **Profile** | Level, 14-day activity chart, vocabulary mastery, letters learned, badges, road-to-TORFL progress, and a one-click coach report to paste into a chat with Claude. |
 | **Settings** | Name, daily goal, light/dark, voice choice, autoplay, slow speech, speaking exercises on/off, keyboard on/off, export/import progress, reset. |
