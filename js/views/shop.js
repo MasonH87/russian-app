@@ -52,19 +52,29 @@ function runCase() {
   const fodder = Array.from({ length: N }, () => BOX_ITEMS[Math.floor(Math.random() * BOX_ITEMS.length)]);
   fodder[WIN] = res.item;
   const reel = h('div', { class: 'reel' }, fodder.map(reelCard));
-  const win = h('div', { class: 'reel-window' }, h('div', { class: 'reel-marker' }), reel);
+  const win = h('div', { class: 'reel-window hidden-reel' }, h('div', { class: 'reel-marker' }), reel);
   const result = h('div', { class: 'case-result' });
-  const overlay = h('div', { class: 'case-overlay' }, h('div', { class: 'case-inner' }, h('h2', {}, `🪆 ${BOX.name}`), win, result));
+  // Opening animation: the doll shakes, then splits into two halves with a flash before the reel appears.
+  const opening = h('div', { class: 'case-open' },
+    h('div', { class: 'case-glow' }),
+    h('div', { class: 'doll' }, h('span', { class: 'half top' }, '🪆'), h('span', { class: 'half bottom' }, '🪆')),
+    h('div', { class: 'muted small case-hint' }, 'Открываем… Opening…'));
+  const overlay = h('div', { class: 'case-overlay' }, h('div', { class: 'case-inner' }, h('h2', {}, `🪆 ${BOX.name}`), opening, win, result));
   document.body.append(overlay);
-  // Start just left of the first card, then land the winner under the marker with a little random offset.
-  const windowW = win.clientWidth;
-  const offset = (Math.random() - 0.5) * (W * 0.6);
-  const target = -(WIN * W + W / 2 - windowW / 2 + offset);
-  reel.style.transform = 'translateX(0px)';
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    reel.style.transition = 'transform 5.4s cubic-bezier(.08,.72,.1,1)';
-    reel.style.transform = `translateX(${target}px)`;
-  }));
+  speak('Матрёшка');
+  setTimeout(() => opening.classList.add('split'), 900);
+  setTimeout(() => {
+    opening.remove();
+    win.classList.remove('hidden-reel');
+    const windowW = win.clientWidth;
+    const offset = (Math.random() - 0.5) * (W * 0.6);
+    const target = -(WIN * W + W / 2 - windowW / 2 + offset);
+    reel.style.transform = 'translateX(0px)';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      reel.style.transition = 'transform 5.4s cubic-bezier(.08,.72,.1,1)';
+      reel.style.transform = `translateX(${target}px)`;
+    }));
+  }, 1900);
   // Ticks while passing cards, for the CS:GO feel.
   let ticks = 0; const tick = setInterval(() => { if (++ticks > 40) clearInterval(tick); }, 120);
   reel.addEventListener('transitionend', () => {
