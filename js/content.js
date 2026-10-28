@@ -4,6 +4,7 @@ import { LETTERS } from '../data/alphabet.js';
 import { norm } from './util.js';
 import { state } from './state.js';
 import { dueCount } from './srs.js';
+import { ALL_ITEMS } from './shop.js';
 
 export const wordId = ru => 'w:' + norm(ru);
 export const letterId = up => 'l:' + up;
@@ -15,6 +16,12 @@ export const WORDS = new Map();
 for (const u of ACTIVE_UNITS) for (const les of u.lessons) for (const v of (les.vocab || [])) {
   const id = wordId(v.ru);
   if (!WORDS.has(id)) WORDS.set(id, { ...v, id, unitId: u.id, lessonId: les.id });
+}
+// Shop and mystery-box items are real Russian words; they join the vocabulary when owned.
+for (const it of ALL_ITEMS) {
+  const ru = it.ru || it.name; if (!ru) continue;
+  const id = wordId(ru);
+  if (!WORDS.has(id)) WORDS.set(id, { ru, en: it.en.replace(/\s*\(.*\)/, ''), id, unitId: 'shop', lessonId: 'shop', accept: [] });
 }
 export const LETTER_MAP = new Map(LETTERS.map(l => [letterId(l.up), l]));
 

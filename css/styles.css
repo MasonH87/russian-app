@@ -324,3 +324,27 @@ input.text:focus,textarea.text:focus{border-color:var(--accent)}
 [data-accent=th-sunset]{--accent:#fb923c;--accent-2:#ea580c;--accent-soft:rgba(251,146,60,.18);--blue:#f472b6;--gold:#fde68a;--bg:#160f1c;--surface:#1f1526;--surface-2:#2a1c33;--surface-3:#372543}
 [data-accent=th-emerald]{--accent:#34d399;--accent-2:#059669;--accent-soft:rgba(52,211,153,.18);--blue:#fbbf24;--bg:#0a1511;--surface:#111f19;--surface-2:#182a22;--surface-3:#21372d}
 [data-theme=light][data-accent=th-winter],[data-theme=light][data-accent=th-sunset],[data-theme=light][data-accent=th-emerald]{--bg:#f3f4fb;--surface:#fff;--surface-2:#eceef8;--surface-3:#dfe2f1}
+
+/* ───────── Mystery box / case opening ───────── */
+.box-card{border-color:var(--gold);background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--gold) 12%,var(--surface)))}
+.odds{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.odd{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text-2)}
+.odd i{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c)}
+.swatch.sm{width:40px;height:28px;border-radius:8px}
+.case-overlay{position:fixed;inset:0;z-index:70;background:rgba(8,10,20,.92);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.case-inner{width:100%;max-width:760px;text-align:center}
+.case-inner h2{margin-bottom:14px}
+.reel-window{position:relative;overflow:hidden;border-radius:18px;background:var(--surface);border:1px solid var(--line);padding:14px 0;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.reel{display:flex;gap:8px;padding-left:4px;will-change:transform}
+.reel-card{flex:0 0 120px;height:124px;border-radius:14px;background:var(--surface-2);border:2px solid var(--surface-3);border-bottom:6px solid var(--c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.reel-card .rc-ico{font-size:2.4rem;line-height:1}
+.reel-card .rc-name{font-size:.78rem;font-weight:700;color:var(--text-2);padding:0 6px;text-align:center}
+.reel-card.won{box-shadow:0 0 0 3px var(--c),0 0 24px var(--c);background:color-mix(in srgb,var(--c) 18%,var(--surface-2))}
+.reel-marker{position:absolute;left:50%;top:0;bottom:0;width:3px;background:var(--gold);transform:translateX(-50%);z-index:2;box-shadow:0 0 10px var(--gold)}
+.reel-marker::before,.reel-marker::after{content:"";position:absolute;left:50%;transform:translateX(-50%);border:8px solid transparent}
+.reel-marker::before{top:0;border-top-color:var(--gold)}
+.reel-marker::after{bottom:0;border-bottom-color:var(--gold)}
+.case-result{min-height:220px;margin-top:18px}
+.won-ico{font-size:4.2rem;line-height:1;display:flex;justify-content:center}
+.won-rarity{font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem;margin:8px 0 2px}
+.shop-item[style*="--c"]{border-bottom-width:5px}

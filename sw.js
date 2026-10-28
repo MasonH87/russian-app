@@ -1,5 +1,5 @@
 // Service worker: offline-first app shell with stale-while-revalidate.
-const CACHE = 'russkiy-v5';
+const CACHE = 'russkiy-v6';
 const CORE = [
   './', './index.html', './manifest.webmanifest', './css/styles.css',
   './js/app.js', './js/util.js', './js/state.js', './js/srs.js', './js/audio.js',
@@ -24,7 +24,7 @@ self.addEventListener('fetch', e => {
   e.respondWith(
     caches.open(CACHE).then(async cache => {
       try {
-        const res = await fetch(e.request);
+        const res = await fetch(e.request, { cache: 'no-cache' }); // always revalidate so updates land on the next open
         if (res.ok) cache.put(e.request, res.clone());
         return res;
       } catch {
