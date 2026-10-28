@@ -1,6 +1,7 @@
 // Spaced-repetition review page, review sessions, and the checkpoint quiz after a break.
-import { h, shuffle, sample, navigate } from '../util.js';
-import { state, addXP, save, clearGate } from '../state.js';
+import { h, shuffle, sample, navigate, todayKey } from '../util.js';
+import { state, addXP, save, clearGate, addCoins } from '../state.js';
+import { COINS } from '../shop.js';
 import { dueItems, reviewItem, masteryCounts } from '../srs.js';
 import { exerciseForItem } from '../generate.js';
 import { XP, checkBadges } from '../gamify.js';
@@ -57,14 +58,14 @@ export function render() {
   return el;
 }
 
-function resultsEl(stats, title, note, close, extra = []) {
+function resultsEl(stats, title, note, close, extra = [], coins = Math.floor(stats.xp / 10)) {
   const el = h('div', { class: 'results popin' },
     h('div', { class: 'big-emoji' }, stats.accuracy >= 90 ? '🧠' : '🔁'),
     h('h1', {}, title), h('p', {}, note),
     h('div', { class: 'result-stats' },
       h('div', { class: 'rs gold' }, h('b', {}, `+${stats.xp}`), h('span', {}, 'XP')),
       h('div', { class: 'rs green' }, h('b', {}, `${stats.correct}/${stats.total}`), h('span', {}, 'first try')),
-      h('div', { class: 'rs gold' }, h('b', {}, `+${Math.floor(stats.xp / 10)}`), h('span', {}, 'rubles ₽')),
+      h('div', { class: 'rs gold' }, h('b', {}, `+${coins}`), h('span', {}, 'rubles ₽')),
       h('div', { class: 'rs' }, h('b', {}, dueItems().length), h('span', {}, 'still due'))),
     ...extra,
     h('div', { class: 'row mt', style: { justifyContent: 'center' } },
@@ -84,11 +85,14 @@ function start(ids, practice) {
     onFinish(stats, close) {
       save();
       const r = addXP(stats.xp, practice ? 'practice' : 'review');
-      const badges = checkBadges();
+      let coins = r.coins || 0;
       const extra = [];
+      if (stats.accuracy === 100 && stats.total >= COINS.minReviewForPerfect) { addCoins(coins * (COINS.perfectMultiplier - 1)); coins *= COINS.perfectMultiplier; extra.push(h('div', { class: 'pill gold' }, `Perfect session! Rubles ×${COINS.perfectMultiplier}`)); }
+      if (!practice && dueItems().length === 0 && state.lastClearDay !== todayKey()) { state.lastClearDay = todayKey(); addCoins(COINS.clearQueue); coins += COINS.clearQueue; extra.push(h('div', { class: 'pill green' }, `Queue cleared! +₽${COINS.clearQueue} (once a day)`)); }
+      const badges = checkBadges();
       if (r.streakChanged) extra.push(h('p', {}, `🔥 Streak: ${r.newStreak} day${r.newStreak === 1 ? '' : 's'}`));
       if (badges.length) extra.push(h('div', { class: 'mt' }, badges.map(b => h('div', { class: 'badge-pop' }, b.ico, ` Badge earned: ${b.name}`))));
-      return resultsEl(stats, practice ? 'Practice complete' : 'Review complete', practice ? 'Practice rounds do not change your card schedule.' : 'Your cards have been rescheduled.', close, extra);
+      return resultsEl(stats, practice ? 'Practice complete' : 'Review complete', practice ? 'Practice rounds do not change your card schedule.' : 'Your cards have been rescheduled.', close, extra, coins);
     },
   });
 }

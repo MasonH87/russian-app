@@ -38,9 +38,10 @@ function lessonResults(unit, lesson, stats, close) {
   state.lessons[lesson.id] = rec;
   const newItems = addItems(lessonItemIds(lesson));
   const r = addXP(xp, 'lesson');
-  const bonusCoins = (firstPass ? COINS.firstPass : 0) + (perfect ? COINS.perfectLesson : 0);
+  const bonusCoins = firstPass ? COINS.firstPass : 0;
   addCoins(bonusCoins);
-  const coins = (r.coins || 0) + bonusCoins;
+  let coins = (r.coins || 0) + bonusCoins;
+  if (perfect) { addCoins(coins * (COINS.perfectMultiplier - 1)); coins *= COINS.perfectMultiplier; } // 100% doubles the rubles
   const badges = checkBadges();
 
   const el = h('div', { class: 'results popin' },
@@ -54,7 +55,7 @@ function lessonResults(unit, lesson, stats, close) {
       h('div', { class: 'rs' }, h('b', {}, newItems), h('span', {}, 'new cards')),
     ),
   );
-  if (perfect) el.append(h('div', { class: 'pill gold' }, `+${XP.perfectBonus} XP · +₽${COINS.perfectLesson} perfect bonus`));
+  if (perfect) el.append(h('div', { class: 'pill gold' }, `Perfect! +${XP.perfectBonus} XP and rubles ×${COINS.perfectMultiplier}`));
   if (r.streakChanged) el.append(h('p', { class: 'mt' }, `🔥 Streak: ${r.newStreak} day${r.newStreak === 1 ? '' : 's'}`));
   if (lesson.vocab?.length) {
     el.append(h('h3', { class: 'mt' }, first ? 'Added to your review deck' : 'Words in this lesson'));
@@ -100,7 +101,9 @@ function testResults(unit, stats, close) {
   rec.attempts += 1; rec.best = Math.max(rec.best || 0, stats.accuracy); rec.passed = rec.passed || pass; rec.lastAt = Date.now();
   state.tests[unit.test.id] = rec;
   const r = addXP(xp, 'test');
-  const coins = (r.coins || 0) + (firstPass ? addCoins(COINS.testPass) : 0);
+  let coins = (r.coins || 0) + (firstPass ? addCoins(COINS.testPass) : 0);
+  const perfectTest = stats.accuracy === 100;
+  if (perfectTest) { addCoins(coins * (COINS.perfectMultiplier - 1)); coins *= COINS.perfectMultiplier; }
   const badges = checkBadges();
   const idx = ACTIVE_UNITS.indexOf(unit);
   const nextUnit = ACTIVE_UNITS[idx + 1];
@@ -115,6 +118,7 @@ function testResults(unit, stats, close) {
       h('div', { class: 'rs gold' }, h('b', {}, `+${coins}`), h('span', {}, 'rubles ₽')),
       h('div', { class: 'rs' }, h('b', {}, rec.attempts), h('span', {}, 'attempts')),
     ));
+  if (perfectTest) el.append(h('div', { class: 'pill gold' }, `Perfect test! Rubles ×${COINS.perfectMultiplier}`));
   if (firstPass && nextUnit && unitUnlocked(nextUnit)) el.append(h('div', { class: 'pill green' }, `🔓 ${nextUnit.title} unlocked`));
   if (firstPass && !nextUnit) el.append(h('p', {}, 'You have finished everything that exists so far. More units are on the way.'));
   if (badges.length) el.append(h('div', { class: 'mt' }, badges.map(b => h('div', { class: 'badge-pop' }, b.ico, ` Badge earned: ${b.name}`))));

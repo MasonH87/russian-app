@@ -2,7 +2,7 @@
 import { UNITS } from '../data/units/index.js';
 import { LETTERS } from '../data/alphabet.js';
 import { norm } from './util.js';
-import { state } from './state.js';
+import { state, save } from './state.js';
 import { dueCount } from './srs.js';
 import { ALL_ITEMS } from './shop.js';
 
@@ -24,6 +24,11 @@ for (const it of ALL_ITEMS) {
   if (!WORDS.has(id)) WORDS.set(id, { ru, en: it.en.replace(/\s*\(.*\)/, ''), id, unitId: 'shop', lessonId: 'shop', accept: [] });
 }
 export const LETTER_MAP = new Map(LETTERS.map(l => [letterId(l.up), l]));
+
+// Drop review cards whose word no longer exists in the content (keeps the queue honest after content edits).
+let orphans = 0;
+for (const id of Object.keys(state.srs)) if (!(id.startsWith('l:') ? LETTER_MAP.has(id) : WORDS.has(id))) { delete state.srs[id]; orphans++; }
+if (orphans) save();
 
 export function itemMeta(id) {
   if (id.startsWith('l:')) { const l = LETTER_MAP.get(id); return l ? { kind: 'letter', id, ...l } : null; }

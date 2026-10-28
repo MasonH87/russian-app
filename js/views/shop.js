@@ -16,7 +16,7 @@ export function render() {
   el.append(h('div', { class: 'spread' }, h('h1', {}, 'Shop · Магазин'), h('span', { class: 'pill gold', style: { fontSize: '1rem' } }, `₽ ${state.coins}`)));
   el.append(h('div', { class: 'card accent' },
     h('div', { class: 'row' }, h('div', { style: { fontSize: '2.6rem' } }, avatarEmoji()), h('div', {}, h('h2', {}, state.settings.name || 'You'), titleText() ? h('div', {}, stripStress(titleText())) : h('div', { class: 'muted' }, 'No title yet'))),
-    h('p', { class: 'small mt' }, `1 ₽ per 10 XP, plus ₽${COINS.firstPass} for a first lesson pass, ₽${COINS.perfectLesson} for a perfect lesson, ₽${COINS.testPass} per test, ₽${COINS.homework} per homework (+₽${COINS.partnerConfirmed} when she confirms), ₽${COINS.weekStreak} every 7-day streak. Everything you own becomes a vocabulary card. Lifetime earned: ₽${state.coinsEarned}.`)));
+    h('p', { class: 'small mt' }, `How to earn: 1 ₽ per 10 XP from anything you do · ₽${COINS.firstPass} first pass of a lesson · ₽${COINS.testPass} per unit test · ₽${COINS.homework} per homework (+₽${COINS.partnerConfirmed} when she confirms) · ₽${COINS.clearQueue} for clearing your whole review queue (once a day) · ₽${COINS.weekStreak} every 7-day streak. Score 100% on a lesson, test or review session and that session’s rubles are doubled. Everything you own becomes a vocabulary card. Lifetime earned: ₽${state.coinsEarned}.`)));
 
   el.append(boxCard());
   for (const [kind, title, desc] of KINDS) {

@@ -3,7 +3,7 @@ import { state, save, spendCoins } from './state.js';
 import { addItem } from './srs.js';
 import { norm } from './util.js';
 
-export const COINS = { perfectLesson: 5, firstPass: 10, testPass: 25, homework: 5, partnerConfirmed: 5, weekStreak: 15 };
+export const COINS = { perfectMultiplier: 2, firstPass: 10, testPass: 25, homework: 5, partnerConfirmed: 5, weekStreak: 15, clearQueue: 10, minReviewForPerfect: 5 };
 
 export const ITEMS = [
   // Avatars (name = Russian word, learned as vocabulary when bought)
