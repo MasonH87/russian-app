@@ -373,3 +373,28 @@ input.text:focus,textarea.text:focus{border-color:var(--accent)}
 .case-hint{transition:opacity .3s}
 .case-open.split .case-hint{opacity:0}
 @keyframes dollShake{0%,100%{transform:rotate(0)}15%{transform:rotate(-8deg) scale(1.03)}30%{transform:rotate(8deg) scale(1.05)}45%{transform:rotate(-10deg) scale(1.07)}60%{transform:rotate(10deg) scale(1.09)}75%{transform:rotate(-6deg) scale(1.1)}90%{transform:rotate(4deg) scale(1.1)}}
+
+/* phrases, chests, 7-tab nav */
+.bottomnav a{font-size:.6rem;gap:1px}
+.nav-ico{font-size:1.2rem}
+.chest{display:flex;align-items:center;gap:14px}
+.chest .big-ico{font-size:2.6rem;line-height:1;animation:chestBob 2s ease-in-out infinite}
+@keyframes chestBob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(-4deg)}}
+.chest.done .big-ico{animation:none;filter:grayscale(.6);opacity:.7}
+.ptabs{display:flex;gap:8px;margin-bottom:14px}
+.ptabs a{flex:1;text-align:center;padding:10px;border-radius:12px;background:var(--surface-2);font-weight:700;color:var(--text-2)}
+.ptabs a.active{background:var(--accent);color:#fff}
+.ptabs a.mat.active{background:var(--red)}
+.phrase{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.phrase:last-child{border-bottom:0}
+.phrase .body{flex:1;min-width:0}
+.phrase .ru{font-size:1.08rem;display:block}
+.phrase .en{color:var(--text-2);font-size:.9rem}
+.phrase .note{display:block;color:var(--muted);font-size:.78rem;margin-top:2px;line-height:1.4}
+.phrase .add{flex-shrink:0;width:36px;height:36px;border-radius:10px;background:var(--surface-2);font-weight:800;display:grid;place-items:center}
+.phrase .add.on{background:var(--green-soft);color:var(--green)}
+.lvl{display:inline-block;font-size:.65rem;font-weight:800;padding:1px 6px;border-radius:6px;margin-left:6px;vertical-align:middle}
+.lvl-1{background:var(--gold-soft);color:var(--gold)}
+.lvl-2{background:rgba(251,146,60,.2);color:#fb923c}
+.lvl-3{background:var(--red-soft);color:var(--red)}
+.pod .big{font-size:1.7rem;font-weight:800;line-height:1.25}

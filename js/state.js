@@ -21,6 +21,7 @@ function defaults() {
     coins: 0,                // spendable rubles (₽), earned alongside XP
     coinsEarned: 0,
     shop: { owned: [], equipped: { avatar: '', title: '', theme: '' }, boosts: { doubleXP: 0 } },
+    daily: { claimDay: '', goalDay: '' },   // daily chest + daily-goal chest
     settings: { name: '', theme: 'dark', autoplay: true, keyboard: true, slowAudio: false, speakExercises: true, voice: '' },
   };
 }
@@ -31,6 +32,7 @@ function load() {
     if (!raw) return defaults();
     const d = defaults(), s = JSON.parse(raw);
     const merged = { ...d, ...s, streak: { ...d.streak, ...(s.streak || {}) }, settings: { ...d.settings, ...(s.settings || {}) },
+      daily: { ...d.daily, ...(s.daily || {}) },
       shop: { ...d.shop, ...(s.shop || {}), equipped: { ...d.shop.equipped, ...(s.shop?.equipped || {}) }, boosts: { ...d.shop.boosts, ...(s.shop?.boosts || {}) } } };
     // Migration: rubles were added after launch; grant them retroactively for XP already earned.
     if (s.coins === undefined) { merged.coins = Math.floor((s.xp || 0) / 10); merged.coinsEarned = merged.coins; }
@@ -54,13 +56,31 @@ export function addXP(amount, reason = '') {
   state.xp += amount;
   state.lastStudy = Date.now();
   state.xpByDay[today] = (state.xpByDay[today] || 0) + amount;
-  const coins = Math.floor(amount / 10);
-  state.coins += coins; state.coinsEarned += coins;
+  let coins = Math.floor(amount / 10);
   const res = touchStreak(today);
+  // Daily-goal chest: the first time today's XP crosses the goal.
+  const todayXP = state.xpByDay[today];
+  if (todayXP - amount < state.dailyGoal && todayXP >= state.dailyGoal && state.daily.goalDay !== today) {
+    state.daily.goalDay = today; state.daily.goalJustHit = true; coins += DAILY.goal; res.goalBonus = DAILY.goal;
+  }
+  state.coins += coins; state.coinsEarned += coins;
   if (res.streakChanged && res.newStreak % 7 === 0) { state.coins += 15; state.coinsEarned += 15; res.streakBonus = 15; }
   save();
   return { xp: amount, coins: coins + (res.streakBonus || 0), ...res, reason };
 }
+export const DAILY = { login: 60, goal: 60 };
+/** Claim today's login chest. Returns the amount, or 0 if already claimed. */
+export function claimDaily() {
+  const today = todayKey();
+  if (state.daily.claimDay === today) return 0;
+  state.daily.claimDay = today;
+  state.coins += DAILY.login; state.coinsEarned += DAILY.login;
+  save();
+  return DAILY.login;
+}
+export const dailyClaimed = () => state.daily.claimDay === todayKey();
+export const goalChestToday = () => state.daily.goalDay === todayKey();
+
 export function addCoins(n, reason = '') {
   if (!n) return 0;
   state.coins += n; state.coinsEarned += n; save();

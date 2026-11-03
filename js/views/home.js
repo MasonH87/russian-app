@@ -1,8 +1,9 @@
 // Dashboard: daily goal, streak, today's session plan, word of the day.
-import { h, todayKey } from '../util.js';
-import { state, save, xpToday, currentStreak } from '../state.js';
-import { dueCount, masteryCounts } from '../srs.js';
-import { nextStep, pendingHomework, WORDS, gate } from '../content.js';
+import { h, todayKey, toast, navigate } from '../util.js';
+import { state, save, xpToday, currentStreak, DAILY, claimDaily, dailyClaimed, goalChestToday } from '../state.js';
+import { dueCount, masteryCounts, addItem } from '../srs.js';
+import { nextStep, pendingHomework, gate, wordId } from '../content.js';
+import { phraseOfTheDay, PHRASE_GROUPS } from '../../data/phrases.js';
 import { levelInfo } from '../gamify.js';
 import { openLesson, openTest } from './lesson.js';
 import { audioBtn } from '../exercises.js';
@@ -59,9 +60,19 @@ export function render() {
         : step(2, next.type === 'lesson' ? `Lesson: ${next.lesson.title}` : `Test: ${next.unit.test.title}`, next.type === 'lesson' ? `${next.unit.icon} ${next.unit.title}` : `Pass mark ${next.unit.test.passMark}%`, lessonToday, () => next.type === 'lesson' ? openLesson(next.lesson.id) : openTest(next.unit.id)),
       step(3, 'Homework', hw ? `${hw} task${hw === 1 ? '' : 's'} to do with your partner` : 'All caught up', !hw, null, '#/homework'))));
 
-  const wod = wordOfTheDay();
-  if (wod) el.append(h('div', { class: 'card' }, h('h3', {}, 'Word of the day'),
-    h('div', { class: 'wod' }, audioBtn(wod.ru, { cls: 'sm' }), h('div', {}, h('div', { class: 'big', lang: 'ru' }, wod.ru), h('div', { class: 'muted' }, wod.en)))));
+  el.append(chestCard());
+
+  const pod = phraseOfTheDay();
+  const podId = wordId(pod.ru);
+  const inDeck = !!state.srs[podId];
+  const group = PHRASE_GROUPS.find(g => g.id === pod.group);
+  el.append(h('div', { class: 'card pod' }, h('div', { class: 'spread' }, h('h3', {}, 'Phrase of the day'), h('span', { class: 'pill accent' }, `${group.icon} ${group.title}`)),
+    h('div', { class: 'wod' }, audioBtn(pod.ru, { cls: 'sm' }), h('div', {}, h('div', { class: 'big', lang: 'ru' }, pod.ru), h('div', { class: 'muted' }, pod.en))),
+    pod.lit ? h('div', { class: 'small muted', style: { marginTop: '6px' } }, `literally: ${pod.lit}`) : null,
+    pod.note ? h('p', { class: 'small', style: { margin: '6px 0 0' } }, pod.note) : null,
+    h('div', { class: 'row mt' },
+      h('button', { class: `btn sm ${inDeck ? 'secondary' : 'green'}`, type: 'button', disabled: inDeck, onclick: () => { addItem(podId); save(); toast('Added to your review deck', 'green'); navigate('#/home'); } }, inDeck ? '✓ In your deck' : '+ Add to my deck'),
+      h('a', { class: 'btn ghost sm', href: '#/phrases' }, 'All phrases ›'))));
 
   el.append(h('div', { class: 'grid-2' },
     h('a', { class: 'card soft', href: '#/alphabet' }, h('h3', {}, '🔤 Alphabet reference'), h('p', { class: 'small', style: { margin: 0 } }, 'All 33 letters with sounds and audio. Tap any letter.')),
@@ -76,9 +87,13 @@ export function render() {
   return el;
 }
 
-function wordOfTheDay() {
-  const list = [...WORDS.values()].filter(w => !/\s/.test(w.ru));
-  if (!list.length) return null;
-  const day = Math.floor(Date.now() / 86400000);
-  return list[day % list.length];
+function chestCard() {
+  const claimed = dailyClaimed(), goal = goalChestToday();
+  const today = xpToday();
+  if (!claimed) return h('div', { class: 'card accent chest' }, h('div', { class: 'big-ico' }, '🎁'),
+    h('div', { style: { flex: 1 } }, h('h3', {}, 'Daily chest'), h('p', { style: { margin: 0 } }, `₽${DAILY.login} for showing up today. Hit your ${state.dailyGoal} XP goal for a second chest worth ₽${DAILY.goal}.`)),
+    h('button', { class: 'btn gold', type: 'button', onclick: () => { const n = claimDaily(); toast(`+₽${n} · Daily chest opened`, 'gold'); navigate('#/home'); } }, `Claim ₽${DAILY.login}`));
+  return h('div', { class: `card soft chest${goal ? ' done' : ''}` }, h('div', { class: 'big-ico' }, goal ? '✅' : '🎁'),
+    h('div', { style: { flex: 1 } }, h('b', {}, goal ? 'Both chests opened today' : 'Daily chest claimed'),
+      h('div', { class: 'small muted' }, goal ? `₽${DAILY.login} + ₽${DAILY.goal} earned. Come back tomorrow for more.` : `Goal chest: ₽${DAILY.goal} when you reach ${state.dailyGoal} XP today (${today}/${state.dailyGoal}).`)));
 }

@@ -1,6 +1,6 @@
 // App bootstrap: hash router, top bar, nav badges, theme, swipe navigation, service worker.
 import { $, $$, navigate } from './util.js';
-import { state, onChange, currentStreak, detectBreak } from './state.js';
+import { state, save, onChange, currentStreak, detectBreak } from './state.js';
 import { dueCount } from './srs.js';
 import { pendingHomework, GATE } from './content.js';
 import { checkBadges } from './gamify.js';
@@ -14,11 +14,14 @@ import * as profile from './views/profile.js';
 import * as settings from './views/settings.js';
 import * as shop from './views/shop.js';
 import * as inventory from './views/inventory.js';
+import * as phrases from './views/phrases.js';
+import { toast } from './util.js';
+import { DAILY } from './state.js';
 import { openLesson, openTest } from './views/lesson.js';
 
-const routes = { home, learn, review, alphabet, homework, profile, settings, shop, inventory };
+const routes = { home, learn, review, alphabet, homework, profile, settings, shop, inventory, phrases };
 // Tab order for swiping; secondary pages map onto their parent tab.
-const TABS = ['home', 'learn', 'review', 'homework', 'inventory', 'profile'];
+const TABS = ['home', 'learn', 'review', 'phrases', 'homework', 'inventory', 'profile'];
 const PARENT = { alphabet: 'learn', settings: 'profile', shop: 'inventory' };
 let currentRoute = 'home';
 
@@ -37,6 +40,7 @@ function updateTop() {
   const dueEl = $('#nav-due'), hwEl = $('#nav-hw');
   dueEl.hidden = !due; dueEl.textContent = due > 99 ? '99+' : due;
   hwEl.hidden = !hw; hwEl.textContent = hw;
+  if (state.daily.goalJustHit) { state.daily.goalJustHit = false; save(); setTimeout(() => toast(`🎁 Daily goal reached! +₽${DAILY.goal} goal chest`, 'gold'), 600); }
 }
 
 function route() {
@@ -44,12 +48,12 @@ function route() {
   const [, name = 'home', arg] = hash.split('/');
   if (name === 'lesson' && arg) { renderView('learn'); openLesson(arg); return; }
   if (name === 'test' && arg) { renderView('learn'); openTest(arg); return; }
-  renderView(routes[name] ? name : 'home');
+  renderView(routes[name] ? name : 'home', 0, arg);
 }
-function renderView(name, dir = 0) {
+function renderView(name, dir = 0, arg) {
   const view = routes[name];
   const el = $('#view');
-  try { el.replaceChildren(view.render()); }
+  try { el.replaceChildren(view.render(arg)); }
   catch (err) { console.error(err); el.innerHTML = `<div class="card"><h2>Something went wrong</h2><p>${err.message}</p></div>`; }
   if (dir) { el.classList.remove('slide-left', 'slide-right'); void el.offsetWidth; el.classList.add(dir < 0 ? 'slide-left' : 'slide-right'); }
   currentRoute = name;
@@ -85,7 +89,7 @@ function routeWithDir(d) {
   const hash = location.hash || '#/home';
   const [, name = 'home', arg] = hash.split('/');
   if ((name === 'lesson' || name === 'test') && arg) return route();
-  renderView(routes[name] ? name : 'home', d);
+  renderView(routes[name] ? name : 'home', d, arg);
 }
 
 applyTheme();

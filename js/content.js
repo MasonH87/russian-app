@@ -5,6 +5,7 @@ import { norm } from './util.js';
 import { state, save } from './state.js';
 import { dueCount } from './srs.js';
 import { ALL_ITEMS } from './shop.js';
+import { ALL_PHRASES, ALL_MAT } from '../data/phrases.js';
 
 export const wordId = ru => 'w:' + norm(ru);
 export const letterId = up => 'l:' + up;
@@ -22,6 +23,10 @@ for (const it of ALL_ITEMS) {
   const ru = it.ru || it.name; if (!ru) continue;
   const id = wordId(ru);
   if (!WORDS.has(id)) WORDS.set(id, { ru, en: it.en.replace(/\s*\(.*\)/, ''), id, unitId: 'shop', lessonId: 'shop', accept: [] });
+}
+for (const ph of [...ALL_PHRASES, ...ALL_MAT]) {
+  const id = wordId(ph.ru);
+  if (!WORDS.has(id)) WORDS.set(id, { ru: ph.ru, en: ph.en.replace(/\s*\(.*?\)/g, '').trim(), id, unitId: ph.mat ? 'mat' : 'phrases', lessonId: 'phrases', accept: [] });
 }
 export const LETTER_MAP = new Map(LETTERS.map(l => [letterId(l.up), l]));
 
